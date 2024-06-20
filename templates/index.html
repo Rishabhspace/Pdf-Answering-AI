@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Answering AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Upload PDF and Ask Questions</h1>
+        <form id="upload-form" action="/doc-upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="application/pdf" required>
+            <input type="submit" value="Upload PDF">
+        </form>
+        <form id="question-form" action="/get-answer" method="post">
+            <input type="text" name="question" placeholder="Ask a question..." required>
+            <input type="submit" value="Ask">
+        </form>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        document.getElementById('upload-form').onsubmit = async function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/doc-upload', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            alert(result.message);
+        };
+
+        document.getElementById('question-form').onsubmit = async function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/get-answer', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            document.getElementById('response').innerText = result.response;
+        };
+    </script>
+</body>
+
+</html>
